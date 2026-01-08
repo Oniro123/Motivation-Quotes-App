@@ -1,0 +1,39 @@
+<%-include("partials/header.ejs")%>
+
+<form action="/backhome" method="POST">
+  <button type="submit" class="btn btn-light">Homepage</button>
+</form>
+
+<h1>NEVER GIVE UP...</h1>
+<%
+let quote_number = 0
+for (const property in cuotaciones) {%>
+  <div class="quote_container">
+    
+    <div class="quote_header">
+      <h2><%= cuotaciones[property]%> - <%= autores[property]%></h2>
+      
+      <div class="delete_form">
+        <form class="comment_form" action="/comment_form" method="POST">
+          <input type="hidden" name="quote_number" value="<%= quote_number %>">
+          <input type="hidden" name="delete_post" value="true">
+          <button type="submit" class="btn btn-danger"><img class="image_garbage" src="trash-can-solid-full.svg" alt="Garbage Can"></button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="edit_form">
+      <form class="comment_form" action="/comment_form" method="POST">
+        <input type="hidden" name="quote_number" value="<%= quote_number %>">
+        <input type="text" name="edit" placeholder="Enter new quote">
+        <input type="hidden" name="edit_post" value="true">
+        <button type="submit" class="btn btn-light">EDIT POST</button>
+      </form>
+    </div>
+  </div>
+<%
+quote_number += 1
+}
+%>
+
+<%-include("partials/footer.ejs")%>

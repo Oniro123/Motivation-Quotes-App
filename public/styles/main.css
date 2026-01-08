@@ -1,0 +1,81 @@
+body{
+    background-color: black;
+}
+
+h1{
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: white;
+}
+
+h2{
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: white;
+}
+
+
+button{
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  margin: 10px;
+}
+.sub-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+}
+
+.image_garbage{
+    height: 120%;
+    width: 120%;
+}
+
+.image{
+    height: 30%;
+    width: 30%;
+}
+
+.comment_form{
+  display: flex;
+  flex-direction: row;
+}
+
+.delete_form{
+  margin: 0px;
+  width: 60px;
+}
+
+.edit_form{
+  margin: 10px;
+}
+
+#quote::placeholder {
+  color: red;
+}
+
+.quote_container {
+  margin-bottom: 30px;
+}
+
+.quote_header {
+  display: flex;
+  flex-direction: row;  /* h2 and delete button side-by-side */
+  align-items: center;  /* Vertically center them */
+  gap: 15px;  /* Space between h2 and button */
+}
+
+.delete_form {
+  margin: 0px;
+  width: 60px;
+}
+
+.edit_form {
+  margin: 10px 0;  /* Space above and below */
+}
