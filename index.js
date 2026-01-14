@@ -1,21 +1,35 @@
 import express from "express";
 import bodyParser from "body-parser";
+import axios from "axios";
+
 const app = express();
 const port = 3000;
-let quotes = ["Happiness can exist only in acceptance","Anyone who has never made a mistake has never tried anything new"]
-let authors = ["George Orwell", "Albert Einstein"]
+let author_of_the_day = ""
+let quote_of_the_day = ""
+let quotes = []
+let authors = []
 
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-app.get("/",(req,res) =>{
+app.get("/",async(req,res) =>{
+  try {
+    const response = await axios.get('https://zenquotes.io/api/random/');
+    author_of_the_day = response.data[0].a
+    quote_of_the_day = response.data[0].q
+    console.log(author_of_the_day)
+  } catch (error) {
+    console.error(error);
+  }
     res.render("index.ejs");
+    
 });
 
 app.post('/comments', (req,res) =>{
    res.render("comments.ejs",{
+    autor_del_dia: author_of_the_day,
+    cuotacion_del_dia: quote_of_the_day,
     cuotaciones: quotes,
     autores: authors,
   });
@@ -74,3 +88,4 @@ app.post('/backhome',(req,res)=>{
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
