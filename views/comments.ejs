@@ -7,7 +7,9 @@
 <h1>NEVER GIVE UP...</h1>
 <h2><%=cuotacion_del_dia%> - <%=autor_del_dia%></h2>
 <%
-let quote_number = 0
+let quote_position = 0
+let quote_number = %> <%=identificacion%>
+<%
 for (const property in cuotaciones) {%>
   <div class="quote_container">
     
@@ -16,7 +18,7 @@ for (const property in cuotaciones) {%>
       
       <div class="delete_form">
         <form class="comment_form" action="/comment_form" method="POST">
-          <input type="hidden" name="quote_number" value="<%= quote_number %>">
+          <input type="hidden" name="quote_number" value="<% quote_number[quote_position]%>">
           <input type="hidden" name="delete_post" value="true">
           <button type="submit" class="btn btn-danger"><img class="image_garbage" src="trash-can-solid-full.svg" alt="Garbage Can"></button>
         </form>
@@ -33,7 +35,7 @@ for (const property in cuotaciones) {%>
     </div>
   </div>
 <%
-quote_number += 1
+quote_position += 1
 }
 %>
 
