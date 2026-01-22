@@ -39,6 +39,7 @@ app.post('/comments', (req,res) =>{
         for (let row of result.rows){
           quotes.push(row.quote)
           authors.push(row.author)
+          ids.push(row.id)
         }
            res.render("comments.ejs",{
               autor_del_dia: author_of_the_day,
@@ -52,9 +53,9 @@ app.post('/comments', (req,res) =>{
 });
 
 app.post('/comment_form', (req, res) => {
-  const quoteNumber = parseInt(req.body.quote_number); 
+  
   if (req.body.delete_post) {
-      db.query("DELETE FROM motivation_quotes WHERE id = $1",[quoteNumber], (err, result)=>{
+      db.query("DELETE FROM motivation_quotes WHERE id = $1",[req.body.quote_number], (err, result)=>{
         if (err){
           console.error("Error executing query", err.stack);
         }else{
@@ -67,7 +68,7 @@ app.post('/comment_form', (req, res) => {
     const newQuote = req.body.edit;
     if (newQuote && newQuote.trim() !== '') {
 
-        db.query("UPDATE motivation_quotes SET quote = $1 WHERE id = $2",[newQuote, quoteNumber], (err, result)=>{
+        db.query("UPDATE motivation_quotes SET quote = $1 WHERE id = $2",[newQuote, req.body.quote_number], (err, result)=>{
         if (err){
           console.error("Error executing query", err.stack);
         }else{

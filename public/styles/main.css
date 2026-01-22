@@ -1,81 +1,259 @@
-body{
-    background-color: black;
-}
-
-h1{
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: white;
-}
-
-h2{
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: white;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
 
-button{
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  margin: 10px;
-}
-.sub-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
+    body {
+        font-family: 'Arial', sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+        position: relative;
+        overflow-x: hidden;
+    }
 
-.main-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5%;
-}
+    /* Smokey animated background */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(ellipse at 20% 30%, rgba(60, 60, 60, 0.15) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(80, 80, 80, 0.12) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(40, 40, 40, 0.1) 0%, transparent 50%);
+        animation: smokeMove 20s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
 
-.image_garbage{
-    height: 120%;
-    width: 120%;
-}
+    @keyframes smokeMove {
+        0%, 100% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: translateY(-20px) scale(1.1);
+            opacity: 0.8;
+        }
+    }
 
-.image{
-    height: 30%;
-    width: 30%;
-}
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        position: relative;
+        z-index: 1;
+    }
 
-.comment_form{
-  display: flex;
-  flex-direction: row;
-}
+    h1 {
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        font-size: 4rem;
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 60px;
+        letter-spacing: 4px;
+        text-shadow: 
+            0 0 10px rgba(255, 255, 255, 0.3),
+            0 0 20px rgba(255, 255, 255, 0.2),
+            0 0 30px rgba(255, 255, 255, 0.1);
+        animation: titleGlow 3s ease-in-out infinite;
+    }
 
-.delete_form{
-  margin: 0px;
-  width: 60px;
-}
+    @keyframes titleGlow {
+        0%, 100% {
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(255, 255, 255, 0.1);
+        }
+        50% {
+            text-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.5),
+                0 0 30px rgba(255, 255, 255, 0.3),
+                0 0 45px rgba(255, 255, 255, 0.2);
+        }
+    }
 
-.edit_form{
-  margin: 10px;
-}
+    .sub-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
 
-#quote::placeholder {
-  color: red;
-}
+    .image {
+        height: 300px;
+        width: 300px;
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 
+            0 0 40px rgba(255, 255, 255, 0.2),
+            0 0 80px rgba(255, 255, 255, 0.1),
+            inset 0 0 20px rgba(0, 0, 0, 0.3);
+        object-fit: cover;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.quote_container {
-  margin-bottom: 30px;
-}
 
-.quote_header {
-  display: flex;
-  flex-direction: row;  /* h2 and delete button side-by-side */
-  align-items: center;  /* Vertically center them */
-  gap: 15px;  /* Space between h2 and button */
-}
+    /* Cool button styles */
+    button {
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        padding: 18px 40px;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+        color: #ffffff;
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
 
-.delete_form {
-  margin: 0px;
-  width: 60px;
-}
+    button::before {
+      color: white;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
 
-.edit_form {
-  margin: 10px 0;  /* Space above and below */
-}
+    button:hover::before {
+        left: 100%;
+    }
+
+    button:hover {
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 
+            0 8px 25px rgba(255, 255, 255, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+        background: linear-gradient(135deg, #3a3a3a 0%, #252525 100%);
+    }
+
+    button:active {
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 
+            0 4px 15px rgba(255, 255, 255, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Additional styles for other elements */
+    h2 {
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        color: white;
+    }
+
+    .comment_form {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .delete_form {
+        margin: 0px;
+    }
+
+    .edit_form {
+        margin: 10px;
+    }
+    #delete-button{
+      color:red;
+    }
+      #edit-button{
+        height: 50%;
+        margin-left: 20px;
+      }
+    #quote::placeholder {
+        color: #ff6b6b;
+    }
+
+    .quote_container {
+        margin-bottom: 30px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .quote_header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        .sub-container {
+            gap: 30px;
+        }
+
+        .image {
+            height: 200px;
+            width: 200px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+    }
+
+    /* Form styling */
+
+        input[type="text"] {
+            width: 100%;
+            padding: 18px 25px;
+            font-size: 1.1rem;
+            margin: 20px 0 40px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset 0 2px 10px rgba(0, 0, 0, 0.3),
+                0 0 0 rgba(255, 255, 255, 0);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                inset 0 2px 10px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]::placeholder {
+            color: #ff6b6b;
+            opacity: 0.8;
+            font-style: italic;
+        }
