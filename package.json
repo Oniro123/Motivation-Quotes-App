@@ -12,11 +12,15 @@
   "type": "module",
   "dependencies": {
     "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.2.1",
     "bootstrap": "^5.3.8",
     "ejs": "^3.1.10",
     "expres": "^0.0.5",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.17.1"
   }
 }

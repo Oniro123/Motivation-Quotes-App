@@ -1,11 +1,21 @@
 <%-include("partials/header.ejs")%>
-
+<div class="header">
 <form action="/backhome" method="POST">
   <button type="submit" class="btn btn-light">Homepage</button>
 </form>
+<div class="registration_buttons">
+<form action="/login" method="POST">
+  <button type="submit" class="btn btn-light">Login</button>
+</form>
+
+<form action="/register" method="POST">
+  <button type="submit" class="btn btn-light">Register</button>
+</form>
+</div>
+</div>
 
 <h1>NEVER GIVE UP...</h1>
-<h2><%=cuotacion_del_dia%> - <%=autor_del_dia%></h2>
+<h2 id="quote_of_the_day"><mark><%=cuotacion_del_dia%> - <%=autor_del_dia%></mark></h2>
 
 <%
 let quote_position = 0

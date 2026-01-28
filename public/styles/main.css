@@ -257,3 +257,25 @@
             opacity: 0.8;
             font-style: italic;
         }
+
+        .header{
+            padding-top: 1%;
+            padding-left: 1%;
+            padding-right: 1%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .registration_buttons{
+            display: flex;
+            align-items: center;
+        }
+        #quote_of_the_day{
+            padding-left: 1%;
+            padding-bottom: 1%;
+        }
+        mark {
+            background-color: white;
+            color: black;
+        }

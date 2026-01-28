@@ -2,9 +2,12 @@ import express from "express";
 import bodyParser from "body-parser";
 import axios from "axios";
 import pg from "pg";
+import bcrypt from "bcrypt";
 
 const app = express();
 const port = 3000;
+const saltRounds = 10;
+
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
@@ -16,7 +19,7 @@ db.connect();
 
 let author_of_the_day = ""
 let quote_of_the_day = ""
-
+let logging
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -104,6 +107,22 @@ app.post('/comment_form', (req, res) => {
 
 app.post('/post',(req,res)=>{
    res.render("post.ejs");
+});
+
+app.post('/login',(req,res)=>{
+  logging = true;
+   res.render("login.ejs",{
+      is_logging: logging,
+   });
+   
+});
+
+app.post('/register',(req,res)=>{
+  logging = false;
+   res.render("login.ejs",{
+      is_logging: logging,
+   });
+   
 });
 
 app.post('/',(req,res)=>{
