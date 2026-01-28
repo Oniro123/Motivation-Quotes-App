@@ -3,6 +3,7 @@
 <div class="header">
 <form action="/backhome" method="POST">
   <button type="submit" class="btn btn-light">Homepage</button>
+  </form>
 </div>
 </div>
 
@@ -12,23 +13,27 @@
   if (locals.no_quote){
     placeholder_text = "Must enter quote"
   }%>
-<form action="/" method="POST">
+
   <%if(is_logging == true){%>
+    <form action="/signed-in" method="POST">
     <h1>ENTER YOUR USERNAME</h1>
     <input type="text" id="name" name="username">
     <h1>ENTER YOUR PASSWORD</h1>
     <input type="text" id="quote" name="password" placeholder="<%=placeholder_text%>">
     <button type="submit" class="btn btn-light">LOG IN</button>
+    </form>
     <%}else{%>
+    <form action="/registered" method="POST">
     <h1>CREATE YOUR USERNAME</h1>
     <input type="text" id="name" name="username">
     <h1>CREATE A PASSWORD</h1>
     <input type="text" id="quote" name="password" placeholder="<%=placeholder_text%>">
     <button type="submit" class="btn btn-light">REGISTER</button>
+    </form>
     <%}%>
     
     
     
-</form>
+
 </div>
 <%-include("partials/footer.ejs")%>

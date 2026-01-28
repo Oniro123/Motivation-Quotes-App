@@ -5,6 +5,11 @@
   <button type="submit" class="btn btn-light">Homepage</button>
 </form>
 <div class="registration_buttons">
+  <%if(signed_in){%>
+  <form action="/sign-out" method="POST">
+  <button type="submit" class="btn btn-light">Sign Out</button>
+  </form>
+<%}else{%>
 <form action="/login" method="POST">
   <button type="submit" class="btn btn-light">Login</button>
 </form>
@@ -12,6 +17,7 @@
 <form action="/register" method="POST">
   <button type="submit" class="btn btn-light">Register</button>
 </form>
+  <%}%>
 </div>
 </div>
 
@@ -22,8 +28,6 @@
     placeholder_text = "Must enter quote"
   }%>
 <form action="/" method="POST">
-    <h1>ENTER YOUR NAME</h1>
-    <input type="text" id="name" name="name">
     <h1>ENTER YOUR QUOTE</h1>
     <input type="text" id="quote" name="quote" placeholder="<%=placeholder_text%>">
   <button type="submit" class="btn btn-light">SUBMIT</button>

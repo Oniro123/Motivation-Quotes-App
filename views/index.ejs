@@ -1,6 +1,11 @@
 <%-include("partials/header.ejs")%>
 <div class="main-container">
+  <%if (locals.user){
+    console.log("username " + user)%>
+  <h1>GROW WITH QUOTES, <%=user%></h1>
+    <%}else{%>
 <h1> GROW WITH QUOTES</h1>
+<%}%>
 <div class="sub-container">
 <form action="/post" method="POST">
   <button type="submit" class="btn btn-light">WANT TO INSPIRE</button>

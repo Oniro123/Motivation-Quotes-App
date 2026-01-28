@@ -4,6 +4,11 @@
   <button type="submit" class="btn btn-light">Homepage</button>
 </form>
 <div class="registration_buttons">
+  <%if (signed_in){%>
+  <form action="/sign-out" method="POST">
+  <button type="submit" class="btn btn-light">Sign Out</button>
+  </form>
+    <%}else{%>
 <form action="/login" method="POST">
   <button type="submit" class="btn btn-light">Login</button>
 </form>
@@ -11,6 +16,7 @@
 <form action="/register" method="POST">
   <button type="submit" class="btn btn-light">Register</button>
 </form>
+<%}%>
 </div>
 </div>
 
@@ -26,7 +32,7 @@ for (const property in cuotaciones) {%>
     
     <div class="quote_header">
       <h2><%= cuotaciones[property]%> - <%= autores[property]%></h2>
-      
+      <%if (signed_in){%>
       <div class="delete_form">
         <form class="comment_form" action="/comment_form" method="POST">
           <input type="hidden" name="quote_number" value="<%=quote_number[quote_position]%>">
@@ -45,6 +51,7 @@ for (const property in cuotaciones) {%>
       </form>
     </div>
   </div>
+  <%}%>
 <%
 quote_position += 1
 }
