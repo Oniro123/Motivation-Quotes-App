@@ -35,3 +35,7 @@ ZenQuotes.io - Daily inspirational quotes
 - Built RESTful API endpoints for complete CRUD operations
 - Integrated third-party APIs with automated data fetching
 - Applied security best practices including password hashing and SQL injection prevention
+
+# **Demo**
+
+This application runs locally. See the `media` folder for a full functionality demo video.
