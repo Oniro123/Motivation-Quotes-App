@@ -11,7 +11,6 @@ const app = express();
 const port = 3000;
 const saltRounds = 10;
 
-// Database configuration
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
@@ -25,18 +24,16 @@ let quote_of_the_day = "";
 
 db.connect();
 
-// Middleware setup - ORDER MATTERS!
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Session configuration MUST come before passport
 app.use(
   session({
-    secret: "SECRETPASSWORD", // Change this to a strong secret in production
+    secret: "SECRETPASSWORD",
     resave: false,
-    saveUninitialized: false, // Changed to false for security
+    saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );
@@ -44,32 +41,24 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// DEBUG MIDDLEWARE - Add this to see what's happening
 app.use((req, res, next) => {
-  console.log('=== REQUEST DEBUG ===');
+  console.log('REQUEST DEBUG');
   console.log('Path:', req.path);
   console.log('Method:', req.method);
   console.log('Session ID:', req.sessionID);
   console.log('Is Authenticated:', req.isAuthenticated());
   console.log('User:', req.user);
   console.log('Session:', req.session);
-  console.log('===================');
   next();
 });
 
-// Fetch quote on startup and every hour
 await fetchQuote();
 setInterval(fetchQuote, 3600 * 1000);
 
-// ============================================================================
-// PASSPORT CONFIGURATION
-// ============================================================================
-
-// Local Strategy for login
 passport.use(
   "local-login",
   new Strategy(async function verify(username, password, cb) {
-    console.log('🔐 Strategy called with username:', username);
+    console.log('Strategy called with username:', username);
     try {
       const result = await db.query(
         "SELECT * FROM userbase WHERE username = $1",
@@ -77,21 +66,20 @@ passport.use(
       );
 
       if (result.rows.length === 0) {
-        console.log('❌ User not found');
+        console.log('User not found');
         return cb(null, false, { message: "User not found. Please register." });
       }
 
       const user = result.rows[0];
-      console.log('✅ User found:', user.username);
+      console.log('User found:', user.username);
 
-      // Compare hashed password
       const match = await bcrypt.compare(password, user.password);
 
       if (match) {
-        console.log('✅ Password match! Login successful');
+        console.log('Password match, login successful');
         return cb(null, user);
       } else {
-        console.log('❌ Password mismatch');
+        console.log('Password mismatch');
         return cb(null, false, { message: "Incorrect password." });
       }
     } catch (err) {
@@ -101,45 +89,34 @@ passport.use(
   })
 );
 
-// Serialize user - stores user.id in the session
 passport.serializeUser((user, cb) => {
-  console.log('📝 Serializing user:', user.id);
+  console.log('Serializing user:', user.id);
   cb(null, user.id);
 });
 
-// Deserialize user - retrieves full user object from database using stored id
 passport.deserializeUser(async (id, cb) => {
-  console.log('📖 Deserializing user ID:', id);
   try {
     const result = await db.query("SELECT * FROM userbase WHERE id = $1", [id]);
     if (result.rows.length > 0) {
-      console.log('✅ User deserialized:', result.rows[0].username);
+      console.log('User deserialized:', result.rows[0].username);
       cb(null, result.rows[0]);
     } else {
-      console.log('❌ User not found during deserialization');
       cb(new Error("User not found"));
     }
   } catch (err) {
-    console.error('❌ Error during deserialization:', err);
+    console.error('Error during deserialization:', err);
     cb(err);
   }
 });
 
-// ============================================================================
-// MIDDLEWARE - Check if user is authenticated
-// ============================================================================
 
 function ensureAuthenticated(req, res, next) {
-  console.log('🔒 ensureAuthenticated check:', req.isAuthenticated());
   if (req.isAuthenticated()) {
     return next();
   }
   res.redirect("/login-page");
 }
 
-// ============================================================================
-// ROUTES
-// ============================================================================
 
 app.get("/", (req, res) => {
   if (req.user){
@@ -149,7 +126,6 @@ app.get("/", (req, res) => {
   res.render("index.ejs")
   }});
 
-// Render login page
 app.get("/login-page", (req, res) => {
   res.render("login.ejs", {
     is_logging: true,
@@ -157,7 +133,6 @@ app.get("/login-page", (req, res) => {
   });
 });
 
-// Render register page
 app.get("/register-page", (req, res) => {
   res.render("login.ejs", {
     is_logging: false,
@@ -165,21 +140,19 @@ app.get("/register-page", (req, res) => {
   });
 });
 
-// Handle login with Passport
+
 app.post(
   "/signed-in",
   passport.authenticate("local-login", {
-    successRedirect: "/", // Redirect to home on success
-    failureRedirect: "/login-page", // Redirect back to login on failure
+    successRedirect: "/",
+    failureRedirect: "/login-page",
   })
 );
 
-// Handle registration
 app.post("/registered", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Check if username already exists
     const checkResult = await db.query(
       "SELECT username FROM userbase WHERE username = $1",
       [username]
@@ -193,18 +166,15 @@ app.post("/registered", async (req, res) => {
       });
     }
 
-    // Hash the password before storing
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Insert new user
     await db.query(
       "INSERT INTO userbase (username, password) VALUES ($1, $2)",
       [username, hashedPassword]
     );
 
-    console.log("User registered successfully!");
+    console.log("User registered successfully");
     
-    // Redirect to login page after successful registration
     res.render("login.ejs", {
       is_logging: true,
       error: null,
@@ -216,7 +186,6 @@ app.post("/registered", async (req, res) => {
   }
 });
 
-// Logout route
 app.get("/logout", (req, res) => {
   req.logout((err) => {
     if (err) {
@@ -233,15 +202,12 @@ app.post("/sign-out", (req, res) => {
       console.error("Logout error:", err);
       return res.redirect("/");
     }
-    console.log("✅ User signed out successfully");
+    console.log("User signed out successfully");
     res.redirect("/");
   });
 });
 
-// Protected route - Comments page (ANYONE can view, but show different UI)
 app.post("/comments", async (req, res) => {
-  console.log('📄 Comments route - Authenticated:', req.isAuthenticated());
-  console.log('📄 User object:', req.user);
   
   try {
     const result = await db.query("SELECT * FROM motivation_quotes");
@@ -250,10 +216,9 @@ app.post("/comments", async (req, res) => {
     const authors = result.rows.map(row => row.author);
     const ids = result.rows.map(row => row.id);
     
-    // Check authentication status
     const isSignedIn = req.isAuthenticated();
     
-    console.log('✅ Rendering comments with signed_in:', isSignedIn);
+    console.log('Rendering comments with signed_in:', isSignedIn);
     
     res.render("comments.ejs", {
       signed_in: isSignedIn,
@@ -262,7 +227,7 @@ app.post("/comments", async (req, res) => {
       cuotaciones: quotes,
       autores: authors,
       identificacion: ids,
-      user: req.user || null, // Pass authenticated user or null
+      user: req.user || null,
     });
   } catch (err) {
     console.error("Error fetching comments:", err);
@@ -270,7 +235,6 @@ app.post("/comments", async (req, res) => {
   }
 });
 
-// Handle comment actions (edit/delete) - MUST be authenticated
 app.post("/comment_form", ensureAuthenticated, async (req, res) => {
   try {
     if (req.body.delete_post) {
@@ -289,7 +253,6 @@ app.post("/comment_form", ensureAuthenticated, async (req, res) => {
       }
     }
 
-    // Fetch updated quotes
     const result = await db.query("SELECT * FROM motivation_quotes");
     
     const quotes = result.rows.map(row => row.quote);
@@ -297,7 +260,7 @@ app.post("/comment_form", ensureAuthenticated, async (req, res) => {
     const ids = result.rows.map(row => row.id);
 
     res.render("comments.ejs", {
-      signed_in: true, // They must be signed in to reach this
+      signed_in: true,
       autor_del_dia: author_of_the_day,
       cuotacion_del_dia: quote_of_the_day,
       cuotaciones: quotes,
@@ -311,7 +274,6 @@ app.post("/comment_form", ensureAuthenticated, async (req, res) => {
   }
 });
 
-// Show post form
 app.post("/post", ensureAuthenticated, (req, res) => {
   const isSignedIn = req.isAuthenticated();
   res.render("post.ejs", {
@@ -320,7 +282,6 @@ app.post("/post", ensureAuthenticated, (req, res) => {
   });
 });
 
-// Route to login page
 app.post("/login", (req, res) => {
   res.render("login.ejs", {
     is_logging: true,
@@ -328,7 +289,6 @@ app.post("/login", (req, res) => {
   });
 });
 
-// Route to register page
 app.post("/register", (req, res) => {
   res.render("login.ejs", {
     is_logging: false,
@@ -336,7 +296,6 @@ app.post("/register", (req, res) => {
   });
 });
 
-// Handle new quote submission
 app.post("/", ensureAuthenticated, async (req, res) => {
   console.log(`The Quote is ${req.body.quote}`);
 
@@ -357,7 +316,7 @@ app.post("/", ensureAuthenticated, async (req, res) => {
 
     console.log(`Quote Uploaded Successfully by ${author}`);
     res.render("index.ejs", {
-      user: req.user,
+      user: req.user.username,
     });
   } catch (err) {
     console.error("Error inserting quote:", err);
@@ -365,25 +324,19 @@ app.post("/", ensureAuthenticated, async (req, res) => {
   }
 });
 
-// Back to home
 app.post("/backhome", (req, res) => {
-  console.log("Back to homepage");
-  res.render("index.ejs", {
-    user: req.user.username,
-  });
-});
+  if (req.user){
+    res.render("index.ejs", {
+    user: req.user.username,})
+  }else{
+  res.render("index.ejs")
+  }});
 
-// ============================================================================
-// SERVER START
-// ============================================================================
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
 
 async function fetchQuote() {
   try {
